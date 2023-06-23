@@ -22,8 +22,8 @@ public function store(Request $request)
         'amount' => $request->amount,
         'invoice_no' => time(), 
         'description' => $request->description,
-        'name' => $name,
-        'email' => $email
+        'name' => $request->name,
+        'email' => $request->email
     ]);
 
     return $token; // that will return array of webPaymentUrl, paymentToken, respCode, respDesc 
