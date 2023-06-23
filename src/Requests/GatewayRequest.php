@@ -9,8 +9,10 @@ use GuzzleHttp\Exception\GuzzleException;
 
 abstract class GatewayRequest 
 {
-
-    public static function paymentToken(array $parameters = [])
+    const SANDBOX_URL = 'https://sandbox-pgw.2c2p.com/payment/4.1/';
+    const LIVE_URL = 'https://pgw.2c2p.com/payment/4.1/';
+    
+    public static function getToken(array $parameters = [])
     {
         $parameters = array_merge($parameters,[
             'merchantID' => config('gateway.merchant_id'),
@@ -33,7 +35,7 @@ abstract class GatewayRequest
          return get_object_vars(self::send(config('gateway.gateway_url.token'), $payload));
     }
 
-    public static function paymentInquiry(array $parameters = [])
+    public static function getInquiry(array $parameters = [])
     {
         $parameters = array_merge($parameters, [
             'merchantID' => config('gateway.merchant_id'),
@@ -67,10 +69,19 @@ abstract class GatewayRequest
         return str_pad($invoice, 12, '0', STR_PAD_LEFT);
     }
 
+    public static function getBaseUrl()
+    {
+        if(config('gateway.sandbox_mode') == true) {
+            return self::SANDBOX_URL;
+        } else {
+            return self::LIVE_URL;
+        }
+    }
+
     public static function send(string $path, $payload)
     {
          $client = new Client([
-            'base_uri' => config('gateway.gateway_url.url'),
+            'base_uri' => self::getBaseUrl(),
             'headers' => [
                 'Content-Type' => 'application/json'
             ]

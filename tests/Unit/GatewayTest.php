@@ -3,7 +3,7 @@
 use Hak\GatewayMyanmar\Facades\Gateway;
 
 it('can send a request to payment gateway response back with array of webRedirectUrl, paymentToken and respCode and respDesc', function(){
-    $gateway = Gateway::initialize([
+    $gateway = Gateway::process([
         'amount' => 10000,
         'description' => 'test payment test',
         'invoice_no' => time(),

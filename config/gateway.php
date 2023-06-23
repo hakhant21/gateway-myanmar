@@ -7,8 +7,8 @@ return [
     'payment_channel' => ['CC', 'MPU', 'QR', 'DPAY', 'IMBANK'],
     'frontend_result_url' => 'http://project.test/checkout',
     'backend_result_url' => 'http://project.test/checkout',
+    'sandbox_mode' => true,
     'gateway_url' => [
-        'url' => 'https://sandbox-pgw.2c2p.com/payment/4.1/',
         'token' => 'paymentToken',
         'inquiry' => 'paymentInquiry'
     ],
