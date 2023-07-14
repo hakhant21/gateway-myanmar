@@ -12,20 +12,23 @@ abstract class GatewayRequest
     const SANDBOX_URL = 'https://sandbox-pgw.2c2p.com/payment/4.1/';
     const LIVE_URL = 'https://pgw.2c2p.com/payment/4.1/';
     
-    public static function getToken(array $parameters = [])
+    public static function getToken(array $payload = [])
     {
-        $parameters = array_merge($parameters,[
+        if($payload['name'] || $payload['email']) {
+            $payload['uiParams'] = [
+                'userInfo' => [
+                    'name' => $payload['name'],
+                    'email' => $payload['email']
+                ]
+            ];
+        }
+
+        $parameters = array_merge($payload,[
             'merchantID' => config('gateway.merchant_id'),
             'currencyCode' => config('gateway.currency_code'),
             'paymentChannel' => config('gateway.payment_channel'),
-            'frontendReturnUrl' => config('gateway.frontend_result_url'),
-            'backendReturnUrl' => config('gateway.backend_result_url'),
-            'uiParams' => [
-                'userInfo' => [
-                    'name' => $parameters['name'] ?? '',
-                    'email' => $parameters['email'] ?? ''
-                ]
-            ]
+            'returnUrl' => config('gateway.returnUrl'),
+            'notifyUrl' => config('gateway.notifyUrl'),
          ]);
 
          $token = self::encrypted($parameters);
@@ -35,9 +38,9 @@ abstract class GatewayRequest
          return get_object_vars(self::send(config('gateway.gateway_url.token'), $payload));
     }
 
-    public static function getInquiry(array $parameters = [])
+    public static function getInquiry(array $payload = [])
     {
-        $parameters = array_merge($parameters, [
+        $parameters = array_merge($payload, [
             'merchantID' => config('gateway.merchant_id'),
             'locale' => config('gateway.locale')
         ]);
